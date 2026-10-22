@@ -6,6 +6,7 @@ on:
     branches: [feature/pixelboard-fusion]
     paths:
       - '.github/workflows/build-fusion-apk.yml'
+      - 'tools/fusion-options.json'
 
 permissions:
   contents: read
