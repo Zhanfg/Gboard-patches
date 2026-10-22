@@ -1,0 +1,11 @@
+[
+  {
+    "patches": {
+      "Add Gboard Signature Bypass": {"enabled": true},
+      "Package Rename": {
+        "enabled": true,
+        "options": {"app_display_name": "Gboard Mod"}
+      }
+    }
+  }
+]
