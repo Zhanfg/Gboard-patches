@@ -1,0 +1,69 @@
+name: Publish Gboard Fusion APK preview
+
+on:
+  push:
+    branches: [feature/pixelboard-fusion]
+    paths:
+      - '.github/workflows/publish-fusion-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download already verified APK build
+        uses: actions/download-artifact@v4
+        with:
+          name: GboardFusion-APK-18.0.3-arm64-v8a
+          run-id: 39818452801
+          repository: Zhanfg/Gboard-patches
+          github-token: ${{ github.token }}
+          path: payload
+      - name: Validate APK and provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          ls -lh payload
+          test -s payload/GboardFusion-18.0.3-arm64-v8a.apk
+          echo '7e28012548236cb4852bdfd31c9eed3dcd64114a6d1a044238fe88c4a602934d  payload/GboardFusion-18.0.3-arm64-v8a.apk' | sha256sum -c -
+          grep -F '7e28012548236cb4852bdfd31c9eed3dcd64114a6d1a044238fe88c4a602934d' payload/fusion-apk.sha256
+          unzip -tq payload/GboardFusion-18.0.3-arm64-v8a.apk >/dev/null
+      - name: Publish directly downloadable signed APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: Zhanfg/Gboard-patches
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG='fusion-18.0.3-preview.1'
+          NOTES="$(mktemp)"
+          cat > "$NOTES" <<'EOF'
+          ## Gboard Fusion 18.0.3 — initial signed device-test APK
+          
+          **Download the single APK below.** You do NOT need Morphe Manager or an .mpp patch bundle.
+          
+          - Package: `dev.jason.com.google.android.inputmethod.latin` (installs alongside stock Gboard).
+          - App label: `Gboard Mod`.
+          - Device architecture: `arm64-v8a`, original Gboard 18.0.3.
+          - CI: [APK build and verification](https://github.com/Zhanfg/Gboard-patches/actions/runs/39818452801).
+          - The patcher reported all 44 published patches applied, zero failures. APK ZIP integrity, Android signature, base SHA-256 and package ID were checked.
+          - **APK SHA-256**: `7e28012548236cb4852bdfd31c9eed3dcd64114a6d1a044238fe88c4a602934d`
+          
+          **Preview only:** not yet tested on a real OnePlus/Android 17 device. PixelBoard's original 18.4 AI/UI behavior is not fully integrated, and donor-specific bytecode may not match 18.0.3. Do not interpret patcher success as confirmation all new AI functions work. Keep the original Gboard available as backup.
+          
+          The APK is signed with a temporary test key. Later builds using another temporary key will not install as updates over this preview; uninstall this preview before installing a differently signed build. No key or signing password is included in the release.
+          
+          Source code and attribution: [PR #1](https://github.com/Zhanfg/Gboard-patches/pull/1), [GPL-3.0](https://github.com/Zhanfg/Gboard-patches/blob/main/LICENSE).
+          EOF
+          gh release create "$TAG" \
+            payload/GboardFusion-18.0.3-arm64-v8a.apk \
+            payload/fusion-apk.sha256 \
+            --target "$GITHUB_SHA" \
+            --title 'Gboard Fusion 18.0.3 APK (Preview 1)' \
+            --notes-file "$NOTES" \
+            --prerelease
+          gh release view "$TAG" --json url,assets,name,isPrerelease
