@@ -1,6 +1,13 @@
 package dev.jason.gboardpatches.patches.gboard.shared.runtimeabi
 
 internal enum class RuntimeCallId(internal val encodedAbi: String) {
+    // Unique PixelBoard runtime interfaces (GPL-3.0).
+    LANGUAGE_DOWNLOAD_GUARD_SHOULD_SKIP("Ldev/jason/gboardpatches/extension/advancedvoice/GboardLanguageDownloadGuard;->shouldSkip(Ljava/lang/String;Ljava/lang/Object;)Z"),
+    CANDIDATE_EMOJI_RUNTIME_ADJUST_CANDIDATE_PAINT("Ldev/jason/gboardpatches/extension/emoji/GboardCandidateEmojiRuntime;->adjustCandidatePaint(Landroid/widget/TextView;Landroid/text/TextPaint;)V"),
+    CLIPBOARD_SYNC_RUNTIME_SYNC_ON_START_INPUT_VIEW("Ldev/jason/gboardpatches/extension/clipboard/GboardClipboardSyncRuntime;->syncOnStartInputView(Ljava/lang/Object;)V"),
+    FEATURES_MENU_ACCESSIBILITY_ON_INFLATE("Ldev/jason/gboardpatches/extension/accessibility/GboardFeaturesMenuAccessibilityRuntime;->onAccessPointsPanelInflated(Landroid/view/View;)V"),
+    FEATURES_MENU_ACCESSIBILITY_ON_VISIBILITY_CHANGED("Ldev/jason/gboardpatches/extension/accessibility/GboardFeaturesMenuAccessibilityRuntime;->onAccessPointsPanelVisibilityChanged(Landroid/view/View;)V"),
+
     EDITING_ACCESS_POINTS_START("Ldev/jason/gboardpatches/extension/editingaccesspoints/GboardEditingAccessPointsRuntime;->start(Ljava/lang/Object;)V"),
     EDITING_ACCESS_POINTS_END("Ldev/jason/gboardpatches/extension/editingaccesspoints/GboardEditingAccessPointsRuntime;->end()V"),
     ACCESS_POINT_COUNT_RUNTIME_APPLY_FLAG_VALUE("Ldev/jason/gboardpatches/extension/accesspointcount/GboardAccessPointCountRuntime;->applyFlagValue(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"),

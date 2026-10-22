@@ -15,6 +15,10 @@
   <a href="https://ko-fi.com/jasonwu1994"><img height="40" alt="Buy me a coffee on Ko-fi" src="https://storage.ko-fi.com/cdn/kofi5.png?v=3"></a>
 </p>
 
+## Integration work (experimental)
+
+The experimental PixelBoard feature port is tracked at [docs/PIXELBOARD_FUSION.md](docs/PIXELBOARD_FUSION.md). Original 18.0.3 compatibility remains authoritative; **18.4.1 support is not yet verified**.
+
 ## Overview
 
 Gboard Patches is a public Morphe source for a curated set of Gboard enhancements, including both global usability improvements and Taiwan-focused features for local input habits and day-to-day use.
