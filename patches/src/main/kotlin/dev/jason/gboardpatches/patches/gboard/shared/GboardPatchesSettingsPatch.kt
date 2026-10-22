@@ -3,6 +3,10 @@ package dev.jason.gboardpatches.patches.gboard.shared
 import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.resourcePatch
 import dev.jason.gboardpatches.patches.shared.Constants.COMPATIBILITY_GBOARD
+import dev.jason.gboardpatches.patches.gboard.features.emoji.gboardCandidateEmojiVibrancyPatch
+import dev.jason.gboardpatches.patches.gboard.features.clipboard.gboardClipboardSyncPatch
+import dev.jason.gboardpatches.patches.gboard.features.spellchecker.gboardSpellCheckerChipsPatch
+import dev.jason.gboardpatches.patches.gboard.features.accessibility.gboardFeaturesMenuAccessibilityPatch
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 
@@ -13,7 +17,12 @@ internal val gboardPatchesSettingsPatch = resourcePatch(
 
     dependsOn(
         gboardPatchesExtensionCarrierPatch,
-        gboardPatchesPreviewAssetsPatch
+        gboardPatchesPreviewAssetsPatch,
+        // Apply PixelBoard-only behavior via the existing extension/settings carrier.
+        gboardCandidateEmojiVibrancyPatch,
+        gboardClipboardSyncPatch,
+        gboardSpellCheckerChipsPatch,
+        gboardFeaturesMenuAccessibilityPatch,
     )
 
     finalize {

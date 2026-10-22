@@ -67,6 +67,13 @@ internal fun BytecodePatchContext.findMutableMethodOrThrow(
     binding: GboardMethodTarget,
 ): MutableMethod = binding.resolve(this)
 
+internal fun BytecodePatchContext.findMutableMethodOrNull(
+    binding: GboardMethodTarget,
+): MutableMethod? {
+    val owner = mutableClassDefByOrNull(binding.ownerDescriptor) ?: return null
+    return owner.methods.firstOrNull(binding::matches)
+}
+
 internal fun BytecodePatchContext.mutableFieldOrThrow(
     binding: GboardFieldTarget,
 ): MutableField = binding.resolve(this)
