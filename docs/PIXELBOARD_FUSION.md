@@ -13,11 +13,13 @@ Source integration branch: `feature/pixelboard-fusion`. This is a source-level p
 
 | PixelBoard capability | Patch integration | Runtime |
 | --- | --- | --- |
-| Repeat speech language-pack download guard | `advancedvoice/GboardAdvancedVoice1831LanguageDownloadGuardPatch.kt` | `GboardLanguageDownloadGuard` |
+| Repeat speech language-pack download guard (staged, **not activated** on 18.0.3) | `advancedvoice/GboardAdvancedVoice1831LanguageDownloadGuardPatch.kt` | `GboardLanguageDownloadGuard` |
 | Candidate emoji paint opacity | `emoji/GboardCandidateEmojiVibrancyPatch.kt` | `GboardCandidateEmojiRuntime` |
 | Foreground clipboard synchronization | `clipboard/GboardClipboardSyncPatch.kt` | `GboardClipboardSyncRuntime` |
 | TalkBack features-menu focus | `accessibility/GboardFeaturesMenuAccessibilityPatch.kt` | `GboardFeaturesMenuAccessibilityRuntime` |
 | Android 12+ spell-check suggestion chips | `spellchecker/GboardSpellCheckerChipsPatch.kt` | bytecode only |
+
+The 18.3.1/18.4.1 language-pack guard is **ported but deliberately not registered** in the 18.0.3 Advanced Voice public patch: the formal 18.0.3 admission contract allows only typed flags and official voice-selection hooks. Wire the guard only after version-specific admission and APK tests. The other four donor behaviors are wired as dependencies of the existing settings patch.
 
 The new features share **one** Gboard-patches `extensions/gboard-patches.rve` carrier, one `GboardPatchRegistry`, and one settings entry. They do not install the PixelBoard extension as a second runtime or duplicate the four published patches (AI Writing Tools, Advanced Voice Typing, Signature Bypass, Package Rename). PixelBoard's additional defaults and device-dependent AI UI are not yet fully transplanted; see limitations.
 

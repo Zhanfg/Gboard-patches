@@ -15,7 +15,6 @@ import dev.jason.gboardpatches.patches.gboard.features.accesspointcount.gboardAc
 import dev.jason.gboardpatches.patches.gboard.features.accesspointsmenu.gboardAccessPointsMenuFeatureMarkerPatch
 import dev.jason.gboardpatches.patches.gboard.features.accesspointsmenu.gboardAccessPointsMenuFlagValuePatch
 import dev.jason.gboardpatches.patches.gboard.features.advancedvoice.gboardAdvancedVoiceFeatureMarkerPatch
-import dev.jason.gboardpatches.patches.gboard.features.advancedvoice.gboardAdvancedVoice1831LanguageDownloadGuardPatch
 import dev.jason.gboardpatches.patches.gboard.features.bluetoothmicrophone.gboardBluetoothMicrophoneFeatureMarkerPatch
 import dev.jason.gboardpatches.patches.gboard.features.bluetoothmicrophone.gboardBluetoothMicrophoneFlagValuePatch
 import dev.jason.gboardpatches.patches.gboard.features.backuprestore.gboardBackupRestoreFeatureMarkerPatch
@@ -287,7 +286,6 @@ val gboardAdvancedVoiceTypingPatch = gboardPublicResourcePatch(
     dependsOn(
         gboardPatchesSettingsPatch,
         gboardAdvancedVoiceFeatureMarkerPatch,
-        gboardAdvancedVoice1831LanguageDownloadGuardPatch,
     )
 }
 
