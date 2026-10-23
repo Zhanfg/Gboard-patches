@@ -1,0 +1,74 @@
+name: Build Gboard Fusion LSPosed module
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/gboard-lsposed-runtime]
+    paths:
+      - 'lsposed/**'
+      - '.github/workflows/gboard-lsposed.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  module-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v4
+      - name: Build LSPosed Android APK
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon -p lsposed :app:assembleRelease
+      - name: Verify module APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output
+          cp lsposed/app/build/outputs/apk/release/app-release.apk output/GboardFusion-LSPosed-0.1.0.apk
+          APK=output/GboardFusion-LSPosed-0.1.0.apk
+          test "$(stat -c%s "$APK")" -gt 20000
+          unzip -tq "$APK" >/dev/null
+          unzip -p "$APK" assets/xposed_init | grep -Fx 'cc.axymorrsen.gboardfusion.lsp.HookEntry'
+          if unzip -Z1 "$APK" | grep -q '^de/robv/android/xposed/'; then
+            echo 'ERROR: framework stub was bundled' >&2
+            exit 1
+          fi
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n1)"
+          AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n1)"
+          "$APKSIGNER" verify --verbose "$APK"
+          "$AAPT" dump badging "$APK" | grep -F "package: name='cc.axymorrsen.gboardfusion.lsp'"
+          "$AAPT" dump xmltree "$APK" AndroidManifest.xml | grep 'xposedminversion'
+          sha256sum "$APK" > output/GboardFusion-LSPosed-0.1.0.sha256
+      - name: Upload ready-to-install APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GboardFusion-LSPosed-APK
+          path: output/*
+          retention-days: 30
+          if-no-files-found: error
+      - name: Publish preview APK
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG='gboard-lsposed-v0.1.0-preview.1'
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release already exists; do not silently overwrite." >&2
+            exit 0
+          fi
+          gh release create "$TAG" \
+            output/GboardFusion-LSPosed-0.1.0.apk \
+            output/GboardFusion-LSPosed-0.1.0.sha256 \
+            --target "$GITHUB_SHA" \
+            --title 'Gboard Fusion LSPosed · Preview 0.1' \
+            --notes 'Independent module for stock Gboard; optional emoji, accessibility, clipboard refresh, rounded keys and voice language guard hooks. Experimental options default OFF. Does not reproduce all Morphe APK patches. Android 17 on-device testing pending.' \
+            --prerelease

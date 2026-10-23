@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Gboard Fusion · LSPosed</string>
+    <string name="app_description">Runtime enhancements for the original, unmodified Gboard. No network permission.</string>
+</resources>

@@ -1,0 +1,26 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'cc.axymorrsen.gboardfusion.lsp'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'cc.axymorrsen.gboardfusion.lsp'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0-preview.1'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+dependencies {
+    // Compile-time compatibility declarations only. Never package framework classes.
+    compileOnly project(':stubs')
+}
